@@ -21,3 +21,18 @@ output "region" {
 output "oidc_provider_arn" {
   value = module.eks.oidc_provider_arn
 }
+
+output "my_vpc" {
+  value = module.my_vpc.vpc_id
+}
+
+output "private_subnets" {
+  description = "List of IDs of private subnets"
+  value = module.my_vpc.private_subnets
+}
+
+output "public_subnets" {
+  description = "List of IDs of private subnets"
+  value = module.my_vpc.public_subnets
+}
+

@@ -1,0 +1,32 @@
+locals {
+  metadata_options = {
+    http_endpoint = "enabled"
+    http_tokens = "optional"
+    http_put_response_hop_limit = 2
+  }
+}
+
+module "eks_managed_node_group" {
+    source = "terraform-aws-modules/eks/aws/eks-managed-node-group"
+    for_each = var.eks_managed_node_groups
+    name = each.value["name"]
+    use_name_prefix = false
+    cluster_name = module.eks.cluster_name
+    cluster_version = module.eks.cluster_version
+    subnet_ids = var.private_subnets
+    cluster_primary_security_group_id = module.eks.cluster_primary_security_group_id
+    vpc_security_group_ids = concat([module.eks.node_security_group_id],var.additional_node_security_groups)
+    user_data_template_path = "${path.module}/templates/linux_custom.tpl"
+    min_size = each.value["min_capacity"]
+    max_size = each.value["max_capacity"]
+    desired_size = each.value["desired_capacity"]
+    instance_types= each.value["instance_type"]
+    ami_id = each.value["ami_id"]
+    launch_template_name = each.value["launch_template_name"]
+    launch_template_name_prefix = false
+    create_iam_role = false
+    key_name = var.key_name
+    iam_role_arn = var.node_group_iam_role_arn
+    metadata_options = local.metadata_options
+
+}

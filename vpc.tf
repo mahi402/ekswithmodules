@@ -1,5 +1,5 @@
 locals {
-  cluster_name = "my-cluster"
+  cluster_name = var.cluster_name
 }
 module "my_vpc" {
   source = "terraform-aws-modules/vpc/aws"
@@ -26,8 +26,3 @@ module "my_vpc" {
 
 }
 
-variable "aws_region" {
-  description = "AWS region"
-  default     = "us-east-1"
-  type        = string
-}
